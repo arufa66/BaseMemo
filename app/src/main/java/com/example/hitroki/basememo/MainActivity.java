@@ -1,21 +1,33 @@
 package com.example.hitroki.basememo;
 
+import android.app.AlertDialog;
 import android.app.LoaderManager;
+import android.content.ContentUris;
 import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
+import com.nhaarman.listviewanimations.appearance.AnimationAdapter;
+import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
+import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCallback;
+import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeDismissAdapter;
+
 
 public class MainActivity extends ActionBarActivity implements LoaderManager.LoaderCallbacks{
     SimpleCursorAdapter adapter;
+    private long memoId;
     public final static String EXTRA_MYID ="com.dotinstall.taguchi.mymemoapp.MYID";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,9 +54,53 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
 
 
         ListView myListView = (ListView)findViewById(R.id.myListView);
-        myListView.setAdapter(adapter);
+
+        SwipeDismissAdapter swipeDismissAdapter = new SwipeDismissAdapter(adapter,
+                new OnDismissCallback() {
+
+                    @Override
+                    public void onDismiss(@NonNull ViewGroup listView, @NonNull final int[] reverseSortedPositions) {
+
+
+                        AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
+                        alertDialog.setTitle("Delete Memo");
+                        alertDialog.setMessage("Are you sure to delete this memo?");
+                        alertDialog.setPositiveButton("OK",new DialogInterface.OnClickListener() {
+                            @Override
+
+                          
+                            public void onClick(DialogInterface dialog, int which) {
+                                for(int position : reverseSortedPositions) {
+                                    Uri uri = ContentUris.withAppendedId(MyContentProvider.CONTENT_URI,memoId);
+                                    String selection = MyConract.Memos.COLUMN_ID + " = ?";
+                                    String selectionArgs[] = new String[]{Long.toString(memoId)};
+                                    getContentResolver().delete(
+                                            uri,
+                                            selection,
+                                            selectionArgs
+                                    );
+                                }
+
+
+                            }
+                        });
+                        alertDialog.show();
+                    }
+
+
+                });
+
+
+
+        AnimationAdapter animationAdapter = new AlphaInAnimationAdapter(swipeDismissAdapter);
+        animationAdapter.setAbsListView(myListView);
+        myListView.setAdapter(animationAdapter);
+
         myListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> adapterView, View view,int i,long l){
+
+
+
                 Intent intent = new Intent(MainActivity.this,EditActivity.class);
                 intent.putExtra(EXTRA_MYID,l);
                 startActivity(intent);

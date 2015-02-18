@@ -11,6 +11,7 @@ public class MyConract {
         public static String COLUMN_ID ="_id";
         public static String COLUMN_TITLE ="title";
         public static String COLUMN_BODY ="_body";
+        public static String COLUMN_CATEGORY ="category";
         public static String COLUMN_CREATED ="created";
         public static String COLUMN_UPDATED ="updated";
 
@@ -20,7 +21,8 @@ public class MyConract {
                         COLUMN_TITLE + " text, " +
                         COLUMN_BODY  + " text, " +
                         COLUMN_CREATED  + " datetime default current_timestamp, " +
-                        COLUMN_UPDATED  + " datetime default current_timestamp)";
+                        COLUMN_UPDATED  + " datetime default current_timestamp, " +
+                        COLUMN_CATEGORY + " text default 'default')" ;
         public static String INIT_TABLE =
                 "insert into " + TABLE_NAME + " ("+ COLUMN_TITLE + " , " +COLUMN_BODY +") values " +
                         "('title1','body1'), ('title2','body2')";
