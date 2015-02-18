@@ -68,7 +68,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
                         alertDialog.setPositiveButton("OK",new DialogInterface.OnClickListener() {
                             @Override
 
-                          
+                            //TODO: スワイプしたアダプターのidをとってくる。
                             public void onClick(DialogInterface dialog, int which) {
                                 for(int position : reverseSortedPositions) {
                                     Uri uri = ContentUris.withAppendedId(MyContentProvider.CONTENT_URI,memoId);
