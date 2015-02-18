@@ -16,23 +16,46 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.Spinner;
 
 import com.nhaarman.listviewanimations.appearance.AnimationAdapter;
 import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCallback;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeDismissAdapter;
 
+import java.util.ArrayList;
 
-public class MainActivity extends ActionBarActivity implements LoaderManager.LoaderCallbacks{
-    SimpleCursorAdapter adapter;
+
+public class MainActivity extends ActionBarActivity implements LoaderManager.LoaderCallbacks,
+        AdapterView.OnItemSelectedListener {
+  private   SimpleCursorAdapter adapter;
+    private Spinner categorySpinner;
+    private ArrayList<String> arrayList;
+   private ArrayAdapter<String> categoryAdapter;
+
     private long memoId;
     public final static String EXTRA_MYID ="com.dotinstall.taguchi.mymemoapp.MYID";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        categorySpinner = (Spinner)findViewById(R.id.category);
+        arrayList = new ArrayList<String>();
+
+         categoryAdapter = new ArrayAdapter<String>(
+                this,
+                android.R.layout.simple_spinner_item,
+                arrayList);
+        adapter.setDropDownViewResource(
+                android.R.layout.simple_spinner_dropdown_item);
+
+        categorySpinner.setAdapter(categoryAdapter);
+        categorySpinner.setOnItemSelectedListener(this);
+
         String[] from={
                 MyConract.Memos.COLUMN_TITLE,
                 MyConract.Memos.COLUMN_UPDATED
@@ -41,7 +64,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
                 android.R.id.text2};
 
 
-
+        //メモのリストのアダプター
         adapter = new SimpleCursorAdapter(
                 this,
                 android.R.layout.simple_list_item_2,
@@ -52,7 +75,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
         );
 
 
-
+        //メモ一覧のリストビュー
         ListView myListView = (ListView)findViewById(R.id.myListView);
 
         SwipeDismissAdapter swipeDismissAdapter = new SwipeDismissAdapter(adapter,
@@ -71,7 +94,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
                             //TODO: スワイプしたアダプターのidをとってくる。
                             public void onClick(DialogInterface dialog, int which) {
                                 for(int position : reverseSortedPositions) {
-                                    Uri uri = ContentUris.withAppendedId(MyContentProvider.CONTENT_URI,memoId);
+                                    Uri uri = ContentUris.withAppendedId(MyContentProvider.CONTENT_URI, memoId);
                                     String selection = MyConract.Memos.COLUMN_ID + " = ?";
                                     String selectionArgs[] = new String[]{Long.toString(memoId)};
                                     getContentResolver().delete(
@@ -119,6 +142,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
         return true;
     }
 
+    //メニューをクリックしたときの処理
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -126,6 +150,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
         // as you specify a parent activity in AndroidManifest.xml.
 
         int id = item.getItemId();
+        //Add　Newをクリックした場合の処理
         if (id == R.id.action_add) {
             Intent intent = new Intent(this, EditActivity.class);
             startActivity(intent);
@@ -159,5 +184,15 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
     @Override
     public void onLoaderReset(Loader loader) {
         adapter.swapCursor(null);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 }
