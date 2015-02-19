@@ -43,10 +43,10 @@ public class EditActivity extends ActionBarActivity {
 
         if (isNewMemo) {
             //new memo
-            setTitle("New Memo");
+            setTitle("新しいメモ");
         } else {
             // edit memo
-            setTitle("Edit Memo");
+            setTitle("メモの編集");
             Uri uri = ContentUris.withAppendedId(MyContentProvider.CONTENT_URI, memoId);
             String[] projection = new String[]{
                     MyConract.Memos.COLUMN_TITLE,
@@ -95,7 +95,7 @@ public class EditActivity extends ActionBarActivity {
                     if(title.equals("")){
                         Toast.makeText(
                                 this,
-                                "Please enter title",
+                                "タイトルを入力してください",
                                 Toast.LENGTH_LONG
                         ).show();
                     }else {
@@ -131,8 +131,8 @@ public class EditActivity extends ActionBarActivity {
                     break;
                 case R.id.action_delete:
                     AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-                    alertDialog.setTitle("Delete Memo");
-                    alertDialog.setMessage("Are you sure to delete this memo?");
+                    alertDialog.setTitle("メモの削除");
+                    alertDialog.setMessage("本当に削除しますか?");
                     alertDialog.setPositiveButton("OK",new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
