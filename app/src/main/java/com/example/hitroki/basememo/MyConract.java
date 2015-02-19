@@ -24,8 +24,8 @@ public class MyConract {
                         COLUMN_UPDATED  + " datetime default current_timestamp, " +
                         COLUMN_CATEGORY + " text default 'default')" ;
         public static String INIT_TABLE =
-                "insert into " + TABLE_NAME + " ("+ COLUMN_TITLE + " , " +COLUMN_BODY +") values " +
-                        "('title1','body1'), ('title2','body2')";
+                "insert into " + TABLE_NAME + " ("+ COLUMN_TITLE + " , " +COLUMN_BODY + " , " + COLUMN_CATEGORY + ") values " +
+                        "('title1','body1','default'), ('title2','body2','default')";
         public static String DROP_TABLE =
                 "drop table if exists " + TABLE_NAME;
 

@@ -50,7 +50,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
                 this,
                 android.R.layout.simple_spinner_item,
                 arrayList);
-        adapter.setDropDownViewResource(
+       categoryAdapter.setDropDownViewResource(
                 android.R.layout.simple_spinner_dropdown_item);
 
         categorySpinner.setAdapter(categoryAdapter);
@@ -58,16 +58,16 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
 
         String[] from={
                 MyConract.Memos.COLUMN_TITLE,
-                MyConract.Memos.COLUMN_UPDATED
+                MyConract.Memos.COLUMN_CATEGORY
         };
-        int[] to = {android.R.id.text1,
-                android.R.id.text2};
+        int[] to = {R.id.text1,
+                R.id.text2};
 
 
         //メモのリストのアダプター
         adapter = new SimpleCursorAdapter(
                 this,
-                android.R.layout.simple_list_item_2,
+               R.layout.row,
                 null,
                 from,
                 to,
@@ -122,8 +122,6 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
         myListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> adapterView, View view,int i,long l){
 
-
-
                 Intent intent = new Intent(MainActivity.this,EditActivity.class);
                 intent.putExtra(EXTRA_MYID,l);
                 startActivity(intent);
@@ -164,7 +162,9 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
         String[] projection = {
                 MyConract.Memos.COLUMN_ID,
                 MyConract.Memos.COLUMN_TITLE,
-                MyConract.Memos.COLUMN_UPDATED
+                MyConract.Memos.COLUMN_UPDATED,
+                MyConract.Memos.COLUMN_CATEGORY
+
         };
         return new CursorLoader(
                 this,
@@ -187,6 +187,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
     }
 
     @Override
+    //TODO:スピナーがクリックした場合の処理を書く。
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
     }

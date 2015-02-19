@@ -10,7 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class MyDBHelper  extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "mymemos3.db";
-    private static final int version = 1;
+    private static final int version = 2;
     public MyDBHelper(Context context) {
         super(context,DB_NAME, null, version);
     }

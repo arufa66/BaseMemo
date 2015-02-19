@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent" android:padding="6px"
+    android:layout_height="50dp" android:id="@+id/rlt_main"
+    >
+    <TextView android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/text1"
+        android:text="Name"
+        android:layout_centerVertical="true"
+        android:layout_alignStart="@+id/text2"></TextView>
+    <TextView android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Description"
+        android:id="@+id/text2"
+        android:layout_marginLeft="10px"
+        android:layout_below="@+id/text1"
+        android:layout_alignParentStart="true"></TextView>
+    <ImageView android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:layout_centerVertical="true"
+        android:id="@+id/iv_forward" android:background="@drawable/green_arrow"
+        android:layout_alignParentRight="true"></ImageView>
+</RelativeLayout>
