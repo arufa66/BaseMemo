@@ -1,10 +1,8 @@
 package com.example.hitroki.basememo;
 
-import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.content.ContentUris;
 import android.content.CursorLoader;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.net.Uri;
@@ -85,15 +83,9 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
                     public void onDismiss(@NonNull ViewGroup listView, @NonNull final int[] reverseSortedPositions) {
 
 
-                        AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
-                        alertDialog.setTitle("Delete Memo");
-                        alertDialog.setMessage("Are you sure to delete this memo?");
-                        alertDialog.setPositiveButton("OK",new DialogInterface.OnClickListener() {
-                            @Override
 
-                            //TODO: スワイプしたアダプターのidをとってくる。
-                            public void onClick(DialogInterface dialog, int which) {
                                 for(int position : reverseSortedPositions) {
+                                    memoId = adapter.getItemId(position);
                                     Uri uri = ContentUris.withAppendedId(MyContentProvider.CONTENT_URI, memoId);
                                     String selection = MyConract.Memos.COLUMN_ID + " = ?";
                                     String selectionArgs[] = new String[]{Long.toString(memoId)};
@@ -105,9 +97,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
                                 }
 
 
-                            }
-                        });
-                        alertDialog.show();
+
                     }
 
 
