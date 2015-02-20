@@ -5,7 +5,6 @@ import android.content.ContentUris;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -44,45 +43,9 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
         categorySpinner = (Spinner)findViewById(R.id.category);
 
 
+        categoryAdapter = CategorySetting.setCategoryAdapter(this);
 
-         categoryAdapter = new ArrayAdapter<String>(
-                this,
-                android.R.layout.simple_spinner_item
-                  );
-
-
-       categoryAdapter.setDropDownViewResource(
-                android.R.layout.simple_spinner_dropdown_item);
-
-
-        String[] projection={
-            MyConract.Memos.COLUMN_CATEGORY
-           };
-
-        Cursor cursor = getContentResolver().query(
-
-                MyContentProvider.CONTENT_URI,
-                projection,
-                null,
-                null,
-                null
-                );
-
-        if (cursor.moveToFirst()) {
-            String category;
-
-
-            do {
-                 category = cursor.getString(cursor.getColumnIndex(MyConract.Memos.COLUMN_CATEGORY));
-                // アダプターに追加
-               categoryAdapter.add(category);
-               } while (cursor.moveToNext());
-            }
-        cursor.close();
-
-
-
-  categorySpinner.setAdapter(categoryAdapter);
+        categorySpinner.setAdapter(categoryAdapter);
         categorySpinner.setOnItemSelectedListener(this);
 
         String[] from={
