@@ -11,6 +11,9 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -19,11 +22,12 @@ import android.widget.Toast;
 import java.util.Date;
 
 
-public class EditActivity extends ActionBarActivity {
+public class EditActivity extends ActionBarActivity implements AdapterView.OnItemSelectedListener {
 
     private boolean isNewMemo = true;
     private long memoId;
     private Spinner categorySpinner;
+    private ArrayAdapter<String> categoryAdapter;
     private EditText myMemoTitle;
     private EditText myMemoBody;
     private TextView myMemoUpdated;
@@ -46,7 +50,10 @@ public class EditActivity extends ActionBarActivity {
         isNewMemo = memoId == 0L ? true : false;
 
 
+            categoryAdapter = CategorySetting.setCategoryAdapter(this);
 
+            categorySpinner.setAdapter(categoryAdapter);
+            categorySpinner.setOnItemSelectedListener(this);
 
 
         if (isNewMemo) {
@@ -167,4 +174,13 @@ public class EditActivity extends ActionBarActivity {
             return super.onOptionsItemSelected(item);
         }
 
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
 }

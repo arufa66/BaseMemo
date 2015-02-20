@@ -44,7 +44,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
 
 
         categoryAdapter = CategorySetting.setCategoryAdapter(this);
-
+        categoryAdapter.add("新しいカテゴリを作成");
         categorySpinner.setAdapter(categoryAdapter);
         categorySpinner.setOnItemSelectedListener(this);
 
