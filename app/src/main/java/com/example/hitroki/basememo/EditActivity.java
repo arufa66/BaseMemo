@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -114,6 +115,7 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
                 case R.id.action_save:
                     title = myMemoTitle.getText().toString().trim();
                     body = myMemoBody.getText().toString().trim();
+
                     if(title.equals("")){
                         Toast.makeText(
                                 this,
@@ -124,6 +126,7 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
                         ContentValues values = new ContentValues();
                         values.put(MyConract.Memos.COLUMN_TITLE,title);
                         values.put(MyConract.Memos.COLUMN_BODY,body);
+                        values.put(MyConract.Memos.COLUMN_CATEGORY,category);
                         if (isNewMemo){
                             //insert
                             getContentResolver().insert(MyContentProvider.CONTENT_URI,values);
@@ -195,7 +198,7 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
     public void onItemSelected(final AdapterView<?> parent, View view, final int position, long id) {
         if(position == parent.getCount() - 1){
             final EditText editView = new EditText(EditActivity.this);
-            new AlertDialog.Builder(EditActivity.this)
+           AlertDialog alertDialog = new AlertDialog.Builder(EditActivity.this)
                     .setIcon(android.R.drawable.ic_dialog_info)
                     .setTitle("テキスト入力ダイアログ")
                             //setViewにてビューを設定します。
@@ -203,16 +206,18 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
                             //新しいカテゴリを登録
-                        category = editView.getText().toString();
+                        category = editView.getText().toString().trim();
                         categoryAdapter.add(category);
-                       setSelection(myCategorySpinner,category);
-                        }
+                        setSelection(myCategorySpinner,category);
+                            Log.v("dialog","1");
+
+                         }
                     })
                     .setNegativeButton("キャンセル", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
                         }
-                    })
-                    .show();
+                    }).create();
+                   alertDialog.show();
 
         }else {
             category =(String) myCategorySpinner.getItemAtPosition(position);
