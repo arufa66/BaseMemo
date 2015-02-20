@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,12 +23,14 @@ public class EditActivity extends ActionBarActivity {
 
     private boolean isNewMemo = true;
     private long memoId;
+    private Spinner categorySpinner;
     private EditText myMemoTitle;
     private EditText myMemoBody;
     private TextView myMemoUpdated;
     private String title = "";
     private String body = "";
     private String updated = "";
+     private String category = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,10 +39,15 @@ public class EditActivity extends ActionBarActivity {
         myMemoTitle = (EditText) findViewById(R.id.myMemoTitle);
         myMemoBody = (EditText) findViewById(R.id.myMemoBody);
         myMemoUpdated = (TextView) findViewById(R.id.Updated);
+        categorySpinner = (Spinner)findViewById(R.id.category);
 
         Intent intent = getIntent();
         memoId = intent.getLongExtra(MainActivity.EXTRA_MYID, 0L);
         isNewMemo = memoId == 0L ? true : false;
+
+
+
+
 
         if (isNewMemo) {
             //new memo
@@ -51,7 +59,8 @@ public class EditActivity extends ActionBarActivity {
             String[] projection = new String[]{
                     MyConract.Memos.COLUMN_TITLE,
                     MyConract.Memos.COLUMN_BODY,
-                    MyConract.Memos.COLUMN_UPDATED
+                    MyConract.Memos.COLUMN_UPDATED,
+                    MyConract.Memos.COLUMN_CATEGORY
 
             };
             String selection = MyConract.Memos.COLUMN_ID + " = ?";
@@ -66,6 +75,7 @@ public class EditActivity extends ActionBarActivity {
                 body = cursor.getString(cursor.getColumnIndex(MyConract.Memos.COLUMN_BODY));
                 updated = "Updated: " + cursor.getString(cursor.getColumnIndex(MyConract.Memos.COLUMN_UPDATED));
             }
+            cursor.close();
             myMemoTitle.setText(title);
             myMemoBody.setText(body);
             myMemoUpdated.setText(updated);

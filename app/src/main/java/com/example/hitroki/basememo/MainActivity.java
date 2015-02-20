@@ -1,7 +1,6 @@
 package com.example.hitroki.basememo;
 
 import android.app.LoaderManager;
-import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -33,7 +32,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
     private Spinner categorySpinner;
 
    private ArrayAdapter<String> categoryAdapter;
-    ContentResolver mCResolver = null;
+
 
     private long memoId;
     public final static String EXTRA_MYID ="com.dotinstall.taguchi.mymemoapp.MYID";
@@ -55,12 +54,12 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
        categoryAdapter.setDropDownViewResource(
                 android.R.layout.simple_spinner_dropdown_item);
 
-        mCResolver = getContentResolver();
+
         String[] projection={
             MyConract.Memos.COLUMN_CATEGORY
            };
 
-        Cursor cursor = mCResolver.query(
+        Cursor cursor = getContentResolver().query(
 
                 MyContentProvider.CONTENT_URI,
                 projection,
