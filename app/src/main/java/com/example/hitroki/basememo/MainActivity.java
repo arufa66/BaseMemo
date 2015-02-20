@@ -44,7 +44,6 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
 
 
         categoryAdapter = CategorySetting.setCategoryAdapter(this);
-        categoryAdapter.add("新しいカテゴリを作成");
         categorySpinner.setAdapter(categoryAdapter);
         categorySpinner.setOnItemSelectedListener(this);
 
@@ -76,8 +75,6 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
                     @Override
                     public void onDismiss(@NonNull ViewGroup listView, @NonNull final int[] reverseSortedPositions) {
 
-
-
                                 for(int position : reverseSortedPositions) {
                                     memoId = adapter.getItemId(position);
                                     Uri uri = ContentUris.withAppendedId(MyContentProvider.CONTENT_URI, memoId);
@@ -89,12 +86,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
                                             selectionArgs
                                     );
                                 }
-
-
-
                     }
-
-
                 });
 
 

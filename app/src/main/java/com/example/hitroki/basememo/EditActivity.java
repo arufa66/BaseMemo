@@ -51,7 +51,7 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
 
 
             categoryAdapter = CategorySetting.setCategoryAdapter(this);
-
+            categoryAdapter.add("新しいカテゴリを作成");
             categorySpinner.setAdapter(categoryAdapter);
             categorySpinner.setOnItemSelectedListener(this);
 
