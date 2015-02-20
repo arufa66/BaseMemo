@@ -47,13 +47,15 @@ public class MyContentProvider extends ContentProvider {
         }
         SQLiteDatabase db = myDBHelper.getReadableDatabase();
         Cursor cursor = db.query(
+                true,
                 MyConract.Memos.TABLE_NAME,
                 projection,
                 selection,
                 selectionArgs,
                 null,
                 null,
-                sortOrder
+                sortOrder,
+                null
         );
         cursor.setNotificationUri(getContext().getContentResolver(),uri);
         return cursor;

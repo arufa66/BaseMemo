@@ -1,10 +1,12 @@
 package com.example.hitroki.basememo;
 
 import android.app.LoaderManager;
+import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -24,15 +26,14 @@ import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCallback;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeDismissAdapter;
 
-import java.util.ArrayList;
-
 
 public class MainActivity extends ActionBarActivity implements LoaderManager.LoaderCallbacks,
         AdapterView.OnItemSelectedListener {
   private   SimpleCursorAdapter adapter;
     private Spinner categorySpinner;
-    private ArrayList<String> arrayList;
+
    private ArrayAdapter<String> categoryAdapter;
+    ContentResolver mCResolver = null;
 
     private long memoId;
     public final static String EXTRA_MYID ="com.dotinstall.taguchi.mymemoapp.MYID";
@@ -42,16 +43,47 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
         setContentView(R.layout.activity_main);
 
         categorySpinner = (Spinner)findViewById(R.id.category);
-        arrayList = new ArrayList<String>();
+
+
 
          categoryAdapter = new ArrayAdapter<String>(
                 this,
-                android.R.layout.simple_spinner_item,
-                arrayList);
+                android.R.layout.simple_spinner_item
+                  );
+
+
        categoryAdapter.setDropDownViewResource(
                 android.R.layout.simple_spinner_dropdown_item);
 
-        categorySpinner.setAdapter(categoryAdapter);
+        mCResolver = getContentResolver();
+        String[] projection={
+            MyConract.Memos.COLUMN_CATEGORY
+           };
+
+        Cursor cursor = mCResolver.query(
+
+                MyContentProvider.CONTENT_URI,
+                projection,
+                null,
+                null,
+                null
+                );
+
+        if (cursor.moveToFirst()) {
+            String category;
+
+
+            do {
+                 category = cursor.getString(cursor.getColumnIndex(MyConract.Memos.COLUMN_CATEGORY));
+                // アダプターに追加
+               categoryAdapter.add(category);
+               } while (cursor.moveToNext());
+            }
+        cursor.close();
+
+
+
+  categorySpinner.setAdapter(categoryAdapter);
         categorySpinner.setOnItemSelectedListener(this);
 
         String[] from={
@@ -179,6 +211,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
     @Override
     //TODO:スピナーがクリックした場合の処理を書く。
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
 
     }
 
