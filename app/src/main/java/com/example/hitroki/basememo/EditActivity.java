@@ -7,8 +7,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,11 +27,12 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
 
     private boolean isNewMemo = true;
     private long memoId;
-    private Spinner categorySpinner;
+    private Spinner myCategorySpinner;
     private ArrayAdapter<String> categoryAdapter;
     private EditText myMemoTitle;
     private EditText myMemoBody;
     private TextView myMemoUpdated;
+    private int categoryPosition;
     private String title = "";
     private String body = "";
     private String updated = "";
@@ -43,7 +45,7 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
         myMemoTitle = (EditText) findViewById(R.id.myMemoTitle);
         myMemoBody = (EditText) findViewById(R.id.myMemoBody);
         myMemoUpdated = (TextView) findViewById(R.id.Updated);
-        categorySpinner = (Spinner)findViewById(R.id.category);
+        myCategorySpinner = (Spinner)findViewById(R.id.category);
 
         Intent intent = getIntent();
         memoId = intent.getLongExtra(MainActivity.EXTRA_MYID, 0L);
@@ -52,8 +54,8 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
 
             categoryAdapter = CategorySetting.setCategoryAdapter(this);
             categoryAdapter.add("新しいカテゴリを作成");
-            categorySpinner.setAdapter(categoryAdapter);
-            categorySpinner.setOnItemSelectedListener(this);
+            myCategorySpinner.setAdapter(categoryAdapter);
+            myCategorySpinner.setOnItemSelectedListener(this);
 
 
         if (isNewMemo) {
@@ -81,11 +83,14 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
                 title = cursor.getString(cursor.getColumnIndex(MyConract.Memos.COLUMN_TITLE));
                 body = cursor.getString(cursor.getColumnIndex(MyConract.Memos.COLUMN_BODY));
                 updated = "Updated: " + cursor.getString(cursor.getColumnIndex(MyConract.Memos.COLUMN_UPDATED));
+               category = cursor.getString(cursor.getColumnIndex(MyConract.Memos.COLUMN_CATEGORY));
             }
             cursor.close();
             myMemoTitle.setText(title);
             myMemoBody.setText(body);
             myMemoUpdated.setText(updated);
+            setSelection(myCategorySpinner,category);
+
 
 
         }
@@ -174,9 +179,44 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
             return super.onOptionsItemSelected(item);
         }
 
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+    private static void setSelection(Spinner spinner, String item) {
+        SpinnerAdapter adapter = spinner.getAdapter();
+        int index = 0;
+        for (int i = 0; i < adapter.getCount(); i++) {
+            if (adapter.getItem(i).equals(item)) {
+                index = i;
+                break;
+            }
+        }
+        spinner.setSelection(index);
+    }
 
+    @Override
+    public void onItemSelected(final AdapterView<?> parent, View view, final int position, long id) {
+        if(position == parent.getCount() - 1){
+            final EditText editView = new EditText(EditActivity.this);
+            new AlertDialog.Builder(EditActivity.this)
+                    .setIcon(android.R.drawable.ic_dialog_info)
+                    .setTitle("テキスト入力ダイアログ")
+                            //setViewにてビューを設定します。
+                    .setView(editView)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            //新しいカテゴリを登録
+                        category = editView.getText().toString();
+                        categoryAdapter.add(category);
+                       setSelection(myCategorySpinner,category);
+                        }
+                    })
+                    .setNegativeButton("キャンセル", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                        }
+                    })
+                    .show();
+
+        }else {
+            category =(String) myCategorySpinner.getItemAtPosition(position);
+        }
     }
 
     @Override
