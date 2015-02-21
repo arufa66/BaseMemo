@@ -28,24 +28,26 @@ import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeDismis
 public class MainActivity extends ActionBarActivity implements LoaderManager.LoaderCallbacks,
         AdapterView.OnItemSelectedListener {
   private   SimpleCursorAdapter adapter;
-    private Spinner categorySpinner;
+    private Spinner myCategorySpinner;
 
    private ArrayAdapter<String> categoryAdapter;
 
 
     private long memoId;
     public final static String EXTRA_MYID ="com.dotinstall.taguchi.mymemoapp.MYID";
+    private final static String ALL = "すべて";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        categorySpinner = (Spinner)findViewById(R.id.category);
+        myCategorySpinner = (Spinner)findViewById(R.id.category);
 
 
-        categoryAdapter = CategorySetting.setCategoryAdapter(this);
-        categorySpinner.setAdapter(categoryAdapter);
-        categorySpinner.setOnItemSelectedListener(this);
+        categoryAdapter = Category.setCategoryAdapter(this);
+        categoryAdapter.add(ALL);
+        myCategorySpinner.setAdapter(categoryAdapter);
+        myCategorySpinner.setOnItemSelectedListener(this);
 
         String[] from={
                 MyConract.Memos.COLUMN_TITLE,
@@ -165,7 +167,9 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
     @Override
     //TODO:スピナーがクリックした場合の処理を書く。
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+       if (position  == Category.getSpinnerPosition(myCategorySpinner, ALL)){
 
+       }
 
     }
 
