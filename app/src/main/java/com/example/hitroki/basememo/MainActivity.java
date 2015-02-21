@@ -5,6 +5,7 @@ import android.content.ContentUris;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -29,8 +30,15 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
         AdapterView.OnItemSelectedListener {
   private   SimpleCursorAdapter adapter;
     private Spinner myCategorySpinner;
+    private final String SORT =  "updated desc";
 
    private ArrayAdapter<String> categoryAdapter;
+    private final String[] POJECTION = {
+            MyConract.Memos.COLUMN_ID,
+            MyConract.Memos.COLUMN_TITLE,
+            MyConract.Memos.COLUMN_UPDATED,
+            MyConract.Memos.COLUMN_CATEGORY
+};
 
 
     private long memoId;
@@ -137,21 +145,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
     }
     @Override
     public Loader onCreateLoader(int id, Bundle args) {
-        String[] projection = {
-                MyConract.Memos.COLUMN_ID,
-                MyConract.Memos.COLUMN_TITLE,
-                MyConract.Memos.COLUMN_UPDATED,
-                MyConract.Memos.COLUMN_CATEGORY
-
-        };
-        return new CursorLoader(
-                this,
-                MyContentProvider.CONTENT_URI,
-                projection,
-                null,
-                null,
-                "updated desc"
-        );
+        return allView(POJECTION);
     }
 
     @Override
@@ -167,14 +161,48 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
     @Override
     //TODO:スピナーがクリックした場合の処理を書く。
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        Cursor cursor;
        if (position  == Category.getSpinnerPosition(myCategorySpinner, ALL)){
 
+
+           getLoaderManager().restartLoader(0,null,this);
+
+       }else{
+           String selection = MyConract.Memos.COLUMN_CATEGORY + " = ?";
+           String[] selectionArgs = new String[]{(String)myCategorySpinner.getSelectedItem()};
+
+           cursor = getContentResolver().query(
+                   MyContentProvider.CONTENT_URI,
+                   POJECTION,
+                   selection,
+                   selectionArgs,
+                   SORT
+           );
+           adapter.swapCursor(cursor);
+
        }
+
+
+
+
+
+
 
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+    private Loader allView(String[] projection){
+
+        return new CursorLoader(
+                this,
+                MyContentProvider.CONTENT_URI,
+                projection,
+                null,
+                null,
+                SORT
+        );
     }
 }

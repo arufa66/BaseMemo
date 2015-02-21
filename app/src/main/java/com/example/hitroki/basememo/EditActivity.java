@@ -189,7 +189,7 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
             final EditText editView = new EditText(EditActivity.this);
            AlertDialog alertDialog = new AlertDialog.Builder(EditActivity.this)
                     .setIcon(android.R.drawable.ic_dialog_info)
-                    .setTitle("テキスト入力ダイアログ")
+                    .setTitle("新しいカテゴリの登録")
                             //setViewにてビューを設定します。
                     .setView(editView)
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
