@@ -187,7 +187,7 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
       int index = getSpinnerPosition(spinner,item);
         spinner.setSelection(index);
     }
-
+    //
     private static int getSpinnerPosition(Spinner spinner, String item){
         SpinnerAdapter adapter = spinner.getAdapter();
         int index = 0;
