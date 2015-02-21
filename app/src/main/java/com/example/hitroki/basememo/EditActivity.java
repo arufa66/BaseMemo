@@ -9,7 +9,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,6 +37,7 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
     private String body = "";
     private String updated = "";
      private String category = "";
+    private String addTag = "新しいカテゴリを作成";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +54,7 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
 
 
             categoryAdapter = CategorySetting.setCategoryAdapter(this);
-            categoryAdapter.add("新しいカテゴリを作成");
+            categoryAdapter.add(addTag);
             myCategorySpinner.setAdapter(categoryAdapter);
             myCategorySpinner.setOnItemSelectedListener(this);
 
@@ -90,7 +90,7 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
             myMemoTitle.setText(title);
             myMemoBody.setText(body);
             myMemoUpdated.setText(updated);
-            setSelection(myCategorySpinner,category);
+            setSpinnerSelection(myCategorySpinner,category);
 
 
 
@@ -182,7 +182,13 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
             return super.onOptionsItemSelected(item);
         }
 
-    private static void setSelection(Spinner spinner, String item) {
+    private static void setSpinnerSelection(Spinner spinner, String item) {
+
+      int index = getSpinnerPosition(spinner,item);
+        spinner.setSelection(index);
+    }
+
+    private static int getSpinnerPosition(Spinner spinner, String item){
         SpinnerAdapter adapter = spinner.getAdapter();
         int index = 0;
         for (int i = 0; i < adapter.getCount(); i++) {
@@ -191,12 +197,12 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
                 break;
             }
         }
-        spinner.setSelection(index);
+        return index;
     }
 
     @Override
     public void onItemSelected(final AdapterView<?> parent, View view, final int position, long id) {
-        if(position == parent.getCount() - 1){
+        if(position == getSpinnerPosition(myCategorySpinner,addTag)){
             final EditText editView = new EditText(EditActivity.this);
            AlertDialog alertDialog = new AlertDialog.Builder(EditActivity.this)
                     .setIcon(android.R.drawable.ic_dialog_info)
@@ -206,10 +212,10 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
                             //新しいカテゴリを登録
-                        category = editView.getText().toString().trim();
-                        categoryAdapter.add(category);
-                        setSelection(myCategorySpinner,category);
-                            Log.v("dialog","1");
+                       category = editView.getText().toString().trim();
+                       categoryAdapter.add(category);
+                       setSpinnerSelection(myCategorySpinner,category);
+
 
                          }
                     })
