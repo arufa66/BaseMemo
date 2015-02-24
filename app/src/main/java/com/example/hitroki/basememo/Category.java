@@ -16,7 +16,7 @@ public class Category {
         ArrayAdapter<String> adapter;
         cursor = categoryQuery(context);
 
-       adapter = new ArrayAdapter<String>(
+        adapter = new ArrayAdapter<String>(
                 context,
                 android.R.layout.simple_spinner_item
         );
@@ -32,7 +32,7 @@ public class Category {
             do {
                 category = cursor.getString(cursor.getColumnIndex(MyConract.Memos.COLUMN_CATEGORY));
                 // アダプターに追加
-               adapter.add(category);
+                adapter.add(category);
             } while (cursor.moveToNext());
         }
         cursor.close();
@@ -50,14 +50,14 @@ public class Category {
                 MyConract.Memos.COLUMN_CATEGORY
         };
 
-       Cursor cursor =context.getContentResolver().query(
+        Cursor cursor =context.getContentResolver().query(
 
-               MyContentProvider.CONTENT_URI,
-               projection,
-               null,
-               null,
-               null
-       );
+                MyContentProvider.CONTENT_URI,
+                projection,
+                null,
+                null,
+                null
+        );
 
 
         return cursor;

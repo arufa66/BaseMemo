@@ -28,17 +28,17 @@ import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeDismis
 
 public class MainActivity extends ActionBarActivity implements LoaderManager.LoaderCallbacks,
         AdapterView.OnItemSelectedListener {
-  private   SimpleCursorAdapter adapter;
+    private   SimpleCursorAdapter adapter;
     private Spinner myCategorySpinner;
     private final String SORT =  "updated desc";
 
-   private ArrayAdapter<String> categoryAdapter;
+    private ArrayAdapter<String> categoryAdapter;
     private final String[] POJECTION = {
             MyConract.Memos.COLUMN_ID,
             MyConract.Memos.COLUMN_TITLE,
             MyConract.Memos.COLUMN_UPDATED,
             MyConract.Memos.COLUMN_CATEGORY
-};
+    };
 
 
     private long memoId;
@@ -68,7 +68,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
         //メモのリストのアダプター
         adapter = new SimpleCursorAdapter(
                 this,
-               R.layout.row,
+                R.layout.row,
                 null,
                 from,
                 to,
@@ -85,17 +85,19 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
                     @Override
                     public void onDismiss(@NonNull ViewGroup listView, @NonNull final int[] reverseSortedPositions) {
 
-                                for(int position : reverseSortedPositions) {
-                                    memoId = adapter.getItemId(position);
-                                    Uri uri = ContentUris.withAppendedId(MyContentProvider.CONTENT_URI, memoId);
-                                    String selection = MyConract.Memos.COLUMN_ID + " = ?";
-                                    String selectionArgs[] = new String[]{Long.toString(memoId)};
-                                    getContentResolver().delete(
-                                            uri,
-                                            selection,
-                                            selectionArgs
-                                    );
-                                }
+                        for(int position : reverseSortedPositions) {
+                            memoId = adapter.getItemId(position);
+                            Uri uri = ContentUris.withAppendedId(MyContentProvider.CONTENT_URI, memoId);
+                            String selection = MyConract.Memos.COLUMN_ID + " = ?";
+                            String selectionArgs[] = new String[]{Long.toString(memoId)};
+                            getContentResolver().delete(
+                                    uri,
+                                    selection,
+                                    selectionArgs
+                            );
+                        }
+                        categoryAdapter = Category.setCategoryAdapter(MainActivity.this);
+
                     }
                 });
 
@@ -162,25 +164,25 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
     //TODO:スピナーがクリックした場合の処理を書く。
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         Cursor cursor;
-       if (position  == Category.getSpinnerPosition(myCategorySpinner, ALL)){
+        if (position  == Category.getSpinnerPosition(myCategorySpinner, ALL)){
 
 
-           getLoaderManager().restartLoader(0,null,this);
+            getLoaderManager().restartLoader(0,null,this);
 
-       }else{
-           String selection = MyConract.Memos.COLUMN_CATEGORY + " = ?";
-           String[] selectionArgs = new String[]{(String)myCategorySpinner.getSelectedItem()};
+        }else{
+            String selection = MyConract.Memos.COLUMN_CATEGORY + " = ?";
+            String[] selectionArgs = new String[]{(String)myCategorySpinner.getSelectedItem()};
 
-           cursor = getContentResolver().query(
-                   MyContentProvider.CONTENT_URI,
-                   POJECTION,
-                   selection,
-                   selectionArgs,
-                   SORT
-           );
-           adapter.swapCursor(cursor);
+            cursor = getContentResolver().query(
+                    MyContentProvider.CONTENT_URI,
+                    POJECTION,
+                    selection,
+                    selectionArgs,
+                    SORT
+            );
+            adapter.swapCursor(cursor);
 
-       }
+        }
 
 
 

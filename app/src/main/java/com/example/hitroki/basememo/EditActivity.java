@@ -35,7 +35,7 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
     private String title = "";
     private String body = "";
     private String updated = "";
-     private String category = "";
+    private String category = "";
     private String addTag = "新しいカテゴリを作成";
 
     @Override
@@ -52,10 +52,10 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
         isNewMemo = memoId == 0L ? true : false;
 
 
-            categoryAdapter = Category.setCategoryAdapter(this);
-            categoryAdapter.add(addTag);
-            myCategorySpinner.setAdapter(categoryAdapter);
-            myCategorySpinner.setOnItemSelectedListener(this);
+        categoryAdapter = Category.setCategoryAdapter(this);
+        categoryAdapter.add(addTag);
+        myCategorySpinner.setAdapter(categoryAdapter);
+        myCategorySpinner.setOnItemSelectedListener(this);
 
 
         if (isNewMemo) {
@@ -83,7 +83,7 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
                 title = cursor.getString(cursor.getColumnIndex(MyConract.Memos.COLUMN_TITLE));
                 body = cursor.getString(cursor.getColumnIndex(MyConract.Memos.COLUMN_BODY));
                 updated = "Updated: " + cursor.getString(cursor.getColumnIndex(MyConract.Memos.COLUMN_UPDATED));
-               category = cursor.getString(cursor.getColumnIndex(MyConract.Memos.COLUMN_CATEGORY));
+                category = cursor.getString(cursor.getColumnIndex(MyConract.Memos.COLUMN_CATEGORY));
             }
             cursor.close();
             myMemoTitle.setText(title);
@@ -97,89 +97,89 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
     }
 
 
-        @Override
-        public boolean onCreateOptionsMenu (Menu menu){
-            // Inflate the menu; this adds items to the action bar if it is present.
-            getMenuInflater().inflate(R.menu.menu_edit, menu);
-            return true;
-        }
+    @Override
+    public boolean onCreateOptionsMenu (Menu menu){
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_edit, menu);
+        return true;
+    }
 
-        @Override
-        public boolean onOptionsItemSelected (MenuItem item){
-            // Handle action bar item clicks here. The action bar will
-            // automatically handle clicks on the Home/Up button, so long
-            int id = item.getItemId();
+    @Override
+    public boolean onOptionsItemSelected (MenuItem item){
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        int id = item.getItemId();
 
-            switch (item.getItemId()){
-                case R.id.action_save:
-                    title = myMemoTitle.getText().toString().trim();
-                    body = myMemoBody.getText().toString().trim();
+        switch (item.getItemId()){
+            case R.id.action_save:
+                title = myMemoTitle.getText().toString().trim();
+                body = myMemoBody.getText().toString().trim();
 
-                    if(title.equals("")){
-                        Toast.makeText(
-                                this,
-                                "タイトルを入力してください",
-                                Toast.LENGTH_LONG
-                        ).show();
+                if(title.equals("")){
+                    Toast.makeText(
+                            this,
+                            "タイトルを入力してください",
+                            Toast.LENGTH_LONG
+                    ).show();
+                }else {
+                    ContentValues values = new ContentValues();
+                    values.put(MyConract.Memos.COLUMN_TITLE,title);
+                    values.put(MyConract.Memos.COLUMN_BODY,body);
+                    values.put(MyConract.Memos.COLUMN_CATEGORY,category);
+                    if (isNewMemo){
+                        //insert
+                        getContentResolver().insert(MyContentProvider.CONTENT_URI,values);
+
                     }else {
-                        ContentValues values = new ContentValues();
-                        values.put(MyConract.Memos.COLUMN_TITLE,title);
-                        values.put(MyConract.Memos.COLUMN_BODY,body);
-                        values.put(MyConract.Memos.COLUMN_CATEGORY,category);
-                        if (isNewMemo){
-                            //insert
-                            getContentResolver().insert(MyContentProvider.CONTENT_URI,values);
-
-                        }else {
-                            //updated
-                            values.put(MyConract.Memos.COLUMN_UPDATED,
-                                    android.text.format.DateFormat.format(
-                                            "yyyy-MM-dd kk:mm:ss",
-                                            new Date()
-                                    ).toString()
-                            );
-                            Uri uri = ContentUris.withAppendedId(MyContentProvider.CONTENT_URI,memoId);
-                            String selection = MyConract.Memos.COLUMN_ID + " =?";
-                            String[] selectionArgs = new String[] {Long.toString(memoId)};
-                            getContentResolver().update(
-                                    uri,
-                                    values,
-                                    selection,
-                                    selectionArgs
-                            );
-                        }
+                        //updated
+                        values.put(MyConract.Memos.COLUMN_UPDATED,
+                                android.text.format.DateFormat.format(
+                                        "yyyy-MM-dd kk:mm:ss",
+                                        new Date()
+                                ).toString()
+                        );
+                        Uri uri = ContentUris.withAppendedId(MyContentProvider.CONTENT_URI,memoId);
+                        String selection = MyConract.Memos.COLUMN_ID + " =?";
+                        String[] selectionArgs = new String[] {Long.toString(memoId)};
+                        getContentResolver().update(
+                                uri,
+                                values,
+                                selection,
+                                selectionArgs
+                        );
+                    }
+                    Intent intent = new Intent(EditActivity.this,MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                }
+                break;
+            case R.id.action_delete:
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+                alertDialog.setTitle("メモの削除");
+                alertDialog.setMessage("本当に削除しますか?");
+                alertDialog.setPositiveButton("OK",new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Uri uri = ContentUris.withAppendedId(MyContentProvider.CONTENT_URI,memoId);
+                        String selection = MyConract.Memos.COLUMN_ID + " = ?";
+                        String selectionArgs[] = new String[]{ Long.toString(memoId)};
+                        getContentResolver().delete(
+                                uri,
+                                selection,
+                                selectionArgs
+                        );
                         Intent intent = new Intent(EditActivity.this,MainActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
+
                     }
-                    break;
-                case R.id.action_delete:
-                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-                    alertDialog.setTitle("メモの削除");
-                    alertDialog.setMessage("本当に削除しますか?");
-                    alertDialog.setPositiveButton("OK",new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Uri uri = ContentUris.withAppendedId(MyContentProvider.CONTENT_URI,memoId);
-                            String selection = MyConract.Memos.COLUMN_ID + " = ?";
-                            String selectionArgs[] = new String[]{ Long.toString(memoId)};
-                            getContentResolver().delete(
-                                    uri,
-                                    selection,
-                                    selectionArgs
-                            );
-                            Intent intent = new Intent(EditActivity.this,MainActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            startActivity(intent);
-
-                        }
-                    });
-                    alertDialog.show();
-                    break;
-            }
-
-            return super.onOptionsItemSelected(item);
+                });
+                alertDialog.show();
+                break;
         }
+
+        return super.onOptionsItemSelected(item);
+    }
 
 
 
@@ -187,7 +187,7 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
     public void onItemSelected(final AdapterView<?> parent, View view, final int position, long id) {
         if(position == Category.getSpinnerPosition(myCategorySpinner, addTag)){
             final EditText editView = new EditText(EditActivity.this);
-           AlertDialog alertDialog = new AlertDialog.Builder(EditActivity.this)
+            AlertDialog alertDialog = new AlertDialog.Builder(EditActivity.this)
                     .setIcon(android.R.drawable.ic_dialog_info)
                     .setTitle("新しいカテゴリの登録")
                             //setViewにてビューを設定します。
@@ -195,18 +195,18 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
                             //新しいカテゴリを登録
-                       category = editView.getText().toString().trim();
-                       categoryAdapter.add(category);
-                       Category.setSpinnerSelection(myCategorySpinner, category);
+                            category = editView.getText().toString().trim();
+                            categoryAdapter.add(category);
+                            Category.setSpinnerSelection(myCategorySpinner, category);
 
 
-                         }
+                        }
                     })
                     .setNegativeButton("キャンセル", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
                         }
                     }).create();
-                   alertDialog.show();
+            alertDialog.show();
 
         }else {
             category =(String) myCategorySpinner.getItemAtPosition(position);
