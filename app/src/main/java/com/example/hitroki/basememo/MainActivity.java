@@ -187,12 +187,6 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
 
         }
 
-
-
-
-
-
-
     }
 
     @Override
