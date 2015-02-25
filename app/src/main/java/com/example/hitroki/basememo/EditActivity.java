@@ -35,7 +35,6 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
     private EditText myMemoTitle;
     private EditText myMemoBody;
     private TextView myMemoUpdated;
-    private int categoryPosition;
     private String title = "";
     private String body = "";
     private String updated = "";
@@ -65,10 +64,10 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
 
 
         if (isNewMemo) {
-            //new memo
+            //新しいメモの場合
             setTitle("新しいメモ");
         } else {
-            // edit memo
+            // メモの編集の場合
             setTitle("メモの編集");
             Uri uri = ContentUris.withAppendedId(MyContentProvider.CONTENT_URI, memoId);
             String[] projection = new String[]{
@@ -120,24 +119,25 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
             case R.id.action_save:
                 title = myMemoTitle.getText().toString().trim();
                 body = myMemoBody.getText().toString().trim();
-
+                //タイトルが入力されていなかった場合、トーストを出す。
                 if(title.equals("")){
                     Toast.makeText(
                             this,
                             "タイトルを入力してください",
                             Toast.LENGTH_LONG
                     ).show();
+                    //メモの追加処理
                 }else {
                     ContentValues values = new ContentValues();
                     values.put(MyConract.Memos.COLUMN_TITLE,title);
                     values.put(MyConract.Memos.COLUMN_BODY,body);
                     values.put(MyConract.Memos.COLUMN_CATEGORY,category);
                     if (isNewMemo){
-                        //insert
+                        // //メモの追加処理
                         getContentResolver().insert(MyContentProvider.CONTENT_URI,values);
 
                     }else {
-                        //updated
+                        //メモの更新処理
                         values.put(MyConract.Memos.COLUMN_UPDATED,
                                 android.text.format.DateFormat.format(
                                         "yyyy-MM-dd kk:mm:ss",
@@ -159,12 +159,16 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
                     startActivity(intent);
                 }
                 break;
+            //削除メニューボタンがクリックされた場合の処理
             case R.id.action_delete:
+                //削除するかの確認のダイアログ生成。
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
                 alertDialog.setTitle("メモの削除");
                 alertDialog.setMessage("本当に削除しますか?");
+
                 alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
+                    //OKボタンをクリックした場合の処理、データベースから対象のメモが削除される
                     public void onClick(DialogInterface dialog, int which) {
                         Uri uri = ContentUris.withAppendedId(MyContentProvider.CONTENT_URI, memoId);
                         String selection = MyConract.Memos.COLUMN_ID + " = ?";
@@ -180,14 +184,16 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
 
                     }
                 });
+                //キャンセルボタンをクリックした場合の処理
                 alertDialog.setNegativeButton("キャンセル", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
 
                     }
                 });
+                //ダイアログ表示中にほかの場所をクリックしても挙動しない。
                 alertDialog.setCancelable(false);
-
+                //ダイアログ表示
                 alertDialog.show();
                 break;
         }
@@ -199,22 +205,25 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
 
     @Override
     public void onItemSelected(final AdapterView<?> parent, View view, final int position, long id) {
+
         if(position == Category.getSpinnerPosition(myCategorySpinner, addTag)){
             editView = new EditText(EditActivity.this);
-            editView.setHint("ここに新しいカテゴリを入力してください。");
+            //
+            editView.setHint("ここに新しいカテゴリ名を入力してください。");
             InputFilter[] _inputFilter = new InputFilter[1];
             _inputFilter[0] = new InputFilter.LengthFilter(15);
             editView.setFilters(_inputFilter);
-
+                    //カテゴリ追加用ダイアログの生成
             AlertDialog alertDialog = new AlertDialog.Builder(EditActivity.this)
+                    //アイコンの指定、android側がデフォルト用意しているものを使用
                     .setIcon(android.R.drawable.ic_dialog_info)
+                    //タイトル指定
                     .setTitle("新しいカテゴリの登録")
-                            //setViewにてビューを設定します。
+                            //setViewにてeditViewを設定します。
                     .setView(editView)
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-
+                        //OKボタンをクリックした場合の挙動
                         public void onClick(DialogInterface dialog, int whichButton) {
-
 
                             //trimメソッドで空白を削除
 
@@ -234,9 +243,12 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
                     }).setCancelable(false)
                     .create();
             alertDialog.show();
+            //alertDialogのOKボタンを取得
             positiveButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+            //positiveButtonはデフォルトで無効。
             positiveButton.setEnabled(false);
 
+            //TextWatcherでリアルタイムにEditTextの挙動が受け取れる。
             editView.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -250,6 +262,8 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
 
                 @Override
                 public void afterTextChanged(Editable s) {
+                    //ダイアログのEditTextに何も入力されていない場合、
+                    //positiveButtonを無効にする処理
                     if(s.toString().equals("")){
                         positiveButton.setEnabled(false);
                     }else{
@@ -263,6 +277,7 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
 
 
         }else {
+            //選ばれたカテゴリ名を取得。
             category =(String) myCategorySpinner.getItemAtPosition(position);
         }
     }
