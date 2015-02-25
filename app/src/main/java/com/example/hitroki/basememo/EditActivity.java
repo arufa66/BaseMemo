@@ -9,11 +9,15 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -37,6 +41,8 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
     private String updated = "";
     private String category = "";
     private String addTag = "新しいカテゴリを作成";
+    private EditText editView;
+    private Button positiveButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,23 +163,31 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
                 AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
                 alertDialog.setTitle("メモの削除");
                 alertDialog.setMessage("本当に削除しますか?");
-                alertDialog.setPositiveButton("OK",new DialogInterface.OnClickListener() {
+                alertDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Uri uri = ContentUris.withAppendedId(MyContentProvider.CONTENT_URI,memoId);
+                        Uri uri = ContentUris.withAppendedId(MyContentProvider.CONTENT_URI, memoId);
                         String selection = MyConract.Memos.COLUMN_ID + " = ?";
-                        String selectionArgs[] = new String[]{ Long.toString(memoId)};
+                        String selectionArgs[] = new String[]{Long.toString(memoId)};
                         getContentResolver().delete(
                                 uri,
                                 selection,
                                 selectionArgs
                         );
-                        Intent intent = new Intent(EditActivity.this,MainActivity.class);
+                        Intent intent = new Intent(EditActivity.this, MainActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
 
                     }
                 });
+                alertDialog.setNegativeButton("キャンセル", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+                alertDialog.setCancelable(false);
+
                 alertDialog.show();
                 break;
         }
@@ -186,33 +200,79 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
     @Override
     public void onItemSelected(final AdapterView<?> parent, View view, final int position, long id) {
         if(position == Category.getSpinnerPosition(myCategorySpinner, addTag)){
-            final EditText editView = new EditText(EditActivity.this);
+            editView = new EditText(EditActivity.this);
+            editView.setHint("ここに新しいカテゴリを入力してください。");
+            InputFilter[] _inputFilter = new InputFilter[1];
+            _inputFilter[0] = new InputFilter.LengthFilter(15);
+            editView.setFilters(_inputFilter);
+
             AlertDialog alertDialog = new AlertDialog.Builder(EditActivity.this)
                     .setIcon(android.R.drawable.ic_dialog_info)
                     .setTitle("新しいカテゴリの登録")
                             //setViewにてビューを設定します。
                     .setView(editView)
                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
                         public void onClick(DialogInterface dialog, int whichButton) {
-                            //新しいカテゴリを登録
+
+
+                            //trimメソッドで空白を削除
+
                             category = editView.getText().toString().trim();
+
+                            //新しいカテゴリを登録
                             categoryAdapter.add(category);
+                            //
                             Category.setSpinnerSelection(myCategorySpinner, category);
 
 
                         }
-                    })
-                    .setNegativeButton("キャンセル", new DialogInterface.OnClickListener() {
+                    }) .setNegativeButton("キャンセル", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
+                            Category.setSpinnerSelection(myCategorySpinner, category);
                         }
-                    }).create();
+                    }).setCancelable(false)
+                    .create();
             alertDialog.show();
+            positiveButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+            positiveButton.setEnabled(false);
+
+            editView.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    PositiveButtonView(s);
+                }
+            });
+
+
+
+
 
         }else {
             category =(String) myCategorySpinner.getItemAtPosition(position);
         }
     }
+   private void PositiveButtonView(Editable s){
+       if(s.toString().equals("")){
+           positiveButton.setEnabled(false);
+       }else{
+           positiveButton.setEnabled(true);
+       }
+   }
 
+   //スピナーで何も選択しなかった際の処理、
+   // 今回は必要なし、
+   //OnItemSelectedListenerインターフェイスのオーバーライド
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 

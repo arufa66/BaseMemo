@@ -27,7 +27,7 @@ import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeDismis
 
 
 public class MainActivity extends ActionBarActivity implements LoaderManager.LoaderCallbacks,
-        AdapterView.OnItemSelectedListener {
+        AdapterView.OnItemSelectedListener,AdapterView.OnItemLongClickListener {
     private   SimpleCursorAdapter adapter;
     private Spinner myCategorySpinner;
     private final String SORT =  "updated desc";
@@ -56,6 +56,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
         categoryAdapter.add(ALL);
         myCategorySpinner.setAdapter(categoryAdapter);
         myCategorySpinner.setOnItemSelectedListener(this);
+        myCategorySpinner.setOnItemLongClickListener(this);
 
         String[] from={
                 MyConract.Memos.COLUMN_TITLE,
@@ -161,7 +162,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
     }
 
     @Override
-    //TODO:スピナーがクリックした場合の処理を書く。
+    //スピナーをクリックした場合の処理。
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         Cursor cursor;
         if (position  == Category.getSpinnerPosition(myCategorySpinner, ALL)){
@@ -180,6 +181,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
                     selectionArgs,
                     SORT
             );
+            //リストビューの更新
             adapter.swapCursor(cursor);
 
         }
@@ -206,5 +208,12 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
                 null,
                 SORT
         );
+    }
+
+    //TODO:スピナーが長押しされた時の処理、カテゴリの削除処理を書く
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        return false;
     }
 }
