@@ -103,11 +103,12 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
                 });
 
 
-
+        //リストビューのスワイプのアクションを定義
         AnimationAdapter animationAdapter = new AlphaInAnimationAdapter(swipeDismissAdapter);
         animationAdapter.setAbsListView(myListView);
         myListView.setAdapter(animationAdapter);
 
+        //
         myListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> adapterView, View view,int i,long l){
 
@@ -117,7 +118,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
 
             }
         });
-
+        //
         getLoaderManager().initLoader(0,null,this);
     }
 
