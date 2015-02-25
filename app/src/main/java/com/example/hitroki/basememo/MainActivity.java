@@ -210,7 +210,6 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
         );
     }
 
-    //TODO:スピナーが長押しされた時の処理、カテゴリの削除処理を書く
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
