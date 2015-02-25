@@ -250,7 +250,11 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
 
                 @Override
                 public void afterTextChanged(Editable s) {
-                    PositiveButtonView(s);
+                    if(s.toString().equals("")){
+                        positiveButton.setEnabled(false);
+                    }else{
+                        positiveButton.setEnabled(true);
+                    }
                 }
             });
 
@@ -262,13 +266,8 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
             category =(String) myCategorySpinner.getItemAtPosition(position);
         }
     }
-   private void PositiveButtonView(Editable s){
-       if(s.toString().equals("")){
-           positiveButton.setEnabled(false);
-       }else{
-           positiveButton.setEnabled(true);
-       }
-   }
+
+
 
    //スピナーで何も選択しなかった際の処理、
    // 今回は必要なし、
