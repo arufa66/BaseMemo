@@ -263,7 +263,8 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
 
                 @Override
                 public void afterTextChanged(Editable s) {
-                    //ダイアログのEditTextに何も入力されていない場合、
+                    //ダイアログのEditTextに何も入力されていない場合と
+                    //「新しいカテゴリを作成」を入力した場合は、
                     //positiveButtonを無効にする処理
                     if(s.toString().equals("")&&s.toString().equals(addTag)){
                         positiveButton.setEnabled(false);
