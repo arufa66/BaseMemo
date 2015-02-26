@@ -52,7 +52,9 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
         myMemoUpdated = (TextView) findViewById(R.id.Updated);
         myCategorySpinner = (Spinner)findViewById(R.id.category);
 
+
         Intent intent = getIntent();
+        //MainActivityから送られてきたidを取り出す。
         memoId = intent.getLongExtra(MainActivity.EXTRA_MYID, 0L);
         isNewMemo = memoId == 0L ? true : false;
 
@@ -205,7 +207,7 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
 
     @Override
     public void onItemSelected(final AdapterView<?> parent, View view, final int position, long id) {
-
+        //「新しいカテゴリを作成」を選択した場合の処理
         if(position == Category.getSpinnerPosition(myCategorySpinner, addTag)){
             editView = new EditText(EditActivity.this);
             //
@@ -226,7 +228,6 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
                         public void onClick(DialogInterface dialog, int whichButton) {
 
                             //trimメソッドで空白を削除
-
                             category = editView.getText().toString().trim();
 
                             //新しいカテゴリを登録
@@ -264,7 +265,7 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
                 public void afterTextChanged(Editable s) {
                     //ダイアログのEditTextに何も入力されていない場合、
                     //positiveButtonを無効にする処理
-                    if(s.toString().equals("")){
+                    if(s.toString().equals("")&&s.toString().equals(addTag)){
                         positiveButton.setEnabled(false);
                     }else{
                         positiveButton.setEnabled(true);
