@@ -82,7 +82,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
 
         //メモ一覧のリストビュー
         ListView myListView = (ListView)findViewById(R.id.myListView);
-
+        //スワイプされた時の処理の定義
         SwipeDismissAdapter swipeDismissAdapter = new SwipeDismissAdapter(adapter,
                 new OnDismissCallback() {
 
@@ -111,17 +111,18 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
         animationAdapter.setAbsListView(myListView);
         myListView.setAdapter(animationAdapter);
 
-        //
+        //メモリストをクリックされた時の処理
         myListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> adapterView, View view,int i,long l){
+            public void onItemClick(AdapterView<?> adapterView, View view,int i,long id){
 
                 Intent intent = new Intent(MainActivity.this,EditActivity.class);
-                intent.putExtra(EXTRA_MYID,l);
+                //idをEditActivityに送ることでメモの識別ができる。
+                intent.putExtra(EXTRA_MYID,id);
                 startActivity(intent);
 
             }
         });
-        //
+        //onCreateLoaderを呼び出す
         getLoaderManager().initLoader(0,null,this);
     }
 
