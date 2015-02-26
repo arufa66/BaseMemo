@@ -28,11 +28,14 @@ import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.SwipeDismis
 
 public class MainActivity extends ActionBarActivity implements LoaderManager.LoaderCallbacks,
         AdapterView.OnItemSelectedListener,AdapterView.OnItemLongClickListener {
+    //メモのリストビューアダプター
     private   SimpleCursorAdapter adapter;
+    //カテゴリのスピナー
     private Spinner myCategorySpinner;
     private final String SORT =  "updated desc";
 
     private ArrayAdapter<String> categoryAdapter;
+    //データベースから取り出すカラム
     private final String[] POJECTION = {
             MyConract.Memos.COLUMN_ID,
             MyConract.Memos.COLUMN_TITLE,
@@ -42,7 +45,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
 
 
     private long memoId;
-    public final static String EXTRA_MYID ="com.dotinstall.taguchi.mymemoapp.MYID";
+    public final static String EXTRA_MYID ="com.example.hitroki.basememo.MYID";
     private final static String ALL = "すべて";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
