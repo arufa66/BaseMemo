@@ -27,7 +27,7 @@ import java.util.Date;
 
 
 public class EditActivity extends ActionBarActivity implements AdapterView.OnItemSelectedListener {
-
+    //新しいメモかを調べるフラグ
     private boolean isNewMemo = true;
     private long memoId;
     private Spinner myCategorySpinner;
@@ -47,15 +47,20 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
+        //タイトルのEditTextを取得
         myMemoTitle = (EditText) findViewById(R.id.myMemoTitle);
+        //メモのEditTextを取得
         myMemoBody = (EditText) findViewById(R.id.myMemoBody);
+        //updateのTextViewを取得
         myMemoUpdated = (TextView) findViewById(R.id.Updated);
+        //カテゴリスピナーを取得
         myCategorySpinner = (Spinner)findViewById(R.id.category);
 
 
         Intent intent = getIntent();
         //MainActivityから送られてきたidを取り出す。
         memoId = intent.getLongExtra(MainActivity.EXTRA_MYID, 0L);
+        //新しいメモならture,編集ならfalse.
         isNewMemo = memoId == 0L ? true : false;
 
 
@@ -92,6 +97,7 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
                 updated = "Updated: " + cursor.getString(cursor.getColumnIndex(MyConract.Memos.COLUMN_UPDATED));
                 category = cursor.getString(cursor.getColumnIndex(MyConract.Memos.COLUMN_CATEGORY));
             }
+            //cursorを閉じる（閉じないと挙動的にめんどいことになる）
             cursor.close();
             myMemoTitle.setText(title);
             myMemoBody.setText(body);
@@ -116,8 +122,9 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         int id = item.getItemId();
-
+          //選んだメニューの識別
         switch (item.getItemId()){
+            //保存を選択した場合の処理
             case R.id.action_save:
                 title = myMemoTitle.getText().toString().trim();
                 body = myMemoBody.getText().toString().trim();
@@ -128,7 +135,7 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
                             "タイトルを入力してください",
                             Toast.LENGTH_LONG
                     ).show();
-                    //メモの追加処理
+
                 }else {
                     ContentValues values = new ContentValues();
                     values.put(MyConract.Memos.COLUMN_TITLE,title);
@@ -156,6 +163,7 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
                                 selectionArgs
                         );
                     }
+                    //MainActivityに戻る
                     Intent intent = new Intent(EditActivity.this,MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);

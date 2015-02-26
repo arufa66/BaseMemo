@@ -10,7 +10,7 @@ import android.widget.SpinnerAdapter;
  * Created by hitroki on 2015/02/20.
  */
 public class Category {
-
+    //
     public static ArrayAdapter<String> setCategoryAdapter(Context context){
         Cursor cursor;
         ArrayAdapter<String> adapter;
@@ -41,7 +41,7 @@ public class Category {
         return adapter;
     }
 
-
+    //
     private static Cursor categoryQuery(Context context){
 
 
