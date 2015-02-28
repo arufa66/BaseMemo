@@ -37,10 +37,10 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
     private ArrayAdapter<String> categoryAdapter;
     //データベースから取り出すカラム
     private final String[] POJECTION = {
-            MyConract.Memos.COLUMN_ID,
-            MyConract.Memos.COLUMN_TITLE,
-            MyConract.Memos.COLUMN_UPDATED,
-            MyConract.Memos.COLUMN_CATEGORY
+            MyContract.Memos.COLUMN_ID,
+            MyContract.Memos.COLUMN_TITLE,
+            MyContract.Memos.COLUMN_UPDATED,
+            MyContract.Memos.COLUMN_CATEGORY
     };
 
 
@@ -62,8 +62,8 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
         myCategorySpinner.setOnItemLongClickListener(this);
 
         String[] from={
-                MyConract.Memos.COLUMN_TITLE,
-                MyConract.Memos.COLUMN_CATEGORY
+                MyContract.Memos.COLUMN_TITLE,
+                MyContract.Memos.COLUMN_CATEGORY
         };
         int[] to = {R.id.text1,
                 R.id.text2};
@@ -92,7 +92,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
                         for(int position : reverseSortedPositions) {
                             memoId = adapter.getItemId(position);
                             Uri uri = ContentUris.withAppendedId(MyContentProvider.CONTENT_URI, memoId);
-                            String selection = MyConract.Memos.COLUMN_ID + " = ?";
+                            String selection = MyContract.Memos.COLUMN_ID + " = ?";
                             String selectionArgs[] = new String[]{Long.toString(memoId)};
                             getContentResolver().delete(
                                     uri,
@@ -176,7 +176,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
             getLoaderManager().restartLoader(0,null,this);
 
         }else{
-            String selection = MyConract.Memos.COLUMN_CATEGORY + " = ?";
+            String selection = MyContract.Memos.COLUMN_CATEGORY + " = ?";
             String[] selectionArgs = new String[]{(String)myCategorySpinner.getSelectedItem()};
 
             cursor = getContentResolver().query(

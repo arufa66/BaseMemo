@@ -78,13 +78,13 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
             setTitle("メモの編集");
             Uri uri = ContentUris.withAppendedId(MyContentProvider.CONTENT_URI, memoId);
             String[] projection = new String[]{
-                    MyConract.Memos.COLUMN_TITLE,
-                    MyConract.Memos.COLUMN_BODY,
-                    MyConract.Memos.COLUMN_UPDATED,
-                    MyConract.Memos.COLUMN_CATEGORY
+                    MyContract.Memos.COLUMN_TITLE,
+                    MyContract.Memos.COLUMN_BODY,
+                    MyContract.Memos.COLUMN_UPDATED,
+                    MyContract.Memos.COLUMN_CATEGORY
 
             };
-            String selection = MyConract.Memos.COLUMN_ID + " = ?";
+            String selection = MyContract.Memos.COLUMN_ID + " = ?";
             String[] selectionArgs = new String[]{Long.toString(memoId)};
             Cursor cursor = getContentResolver().query(uri,
                     projection,
@@ -92,10 +92,10 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
                     selectionArgs,
                     null);
             while (cursor.moveToNext()) {
-                title = cursor.getString(cursor.getColumnIndex(MyConract.Memos.COLUMN_TITLE));
-                body = cursor.getString(cursor.getColumnIndex(MyConract.Memos.COLUMN_BODY));
-                updated = "Updated: " + cursor.getString(cursor.getColumnIndex(MyConract.Memos.COLUMN_UPDATED));
-                category = cursor.getString(cursor.getColumnIndex(MyConract.Memos.COLUMN_CATEGORY));
+                title = cursor.getString(cursor.getColumnIndex(MyContract.Memos.COLUMN_TITLE));
+                body = cursor.getString(cursor.getColumnIndex(MyContract.Memos.COLUMN_BODY));
+                updated = "Updated: " + cursor.getString(cursor.getColumnIndex(MyContract.Memos.COLUMN_UPDATED));
+                category = cursor.getString(cursor.getColumnIndex(MyContract.Memos.COLUMN_CATEGORY));
             }
             //cursorを閉じる（閉じないと挙動的にめんどいことになる）
             cursor.close();
@@ -138,23 +138,23 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
 
                 }else {
                     ContentValues values = new ContentValues();
-                    values.put(MyConract.Memos.COLUMN_TITLE,title);
-                    values.put(MyConract.Memos.COLUMN_BODY,body);
-                    values.put(MyConract.Memos.COLUMN_CATEGORY,category);
+                    values.put(MyContract.Memos.COLUMN_TITLE,title);
+                    values.put(MyContract.Memos.COLUMN_BODY,body);
+                    values.put(MyContract.Memos.COLUMN_CATEGORY,category);
                     if (isNewMemo){
                         // //メモの追加処理
                         getContentResolver().insert(MyContentProvider.CONTENT_URI,values);
 
                     }else {
                         //メモの更新処理
-                        values.put(MyConract.Memos.COLUMN_UPDATED,
+                        values.put(MyContract.Memos.COLUMN_UPDATED,
                                 android.text.format.DateFormat.format(
                                         "yyyy-MM-dd kk:mm:ss",
                                         new Date()
                                 ).toString()
                         );
                         Uri uri = ContentUris.withAppendedId(MyContentProvider.CONTENT_URI,memoId);
-                        String selection = MyConract.Memos.COLUMN_ID + " =?";
+                        String selection = MyContract.Memos.COLUMN_ID + " =?";
                         String[] selectionArgs = new String[] {Long.toString(memoId)};
                         getContentResolver().update(
                                 uri,
@@ -181,7 +181,7 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
                     //OKボタンをクリックした場合の処理、データベースから対象のメモが削除される
                     public void onClick(DialogInterface dialog, int which) {
                         Uri uri = ContentUris.withAppendedId(MyContentProvider.CONTENT_URI, memoId);
-                        String selection = MyConract.Memos.COLUMN_ID + " = ?";
+                        String selection = MyContract.Memos.COLUMN_ID + " = ?";
                         String selectionArgs[] = new String[]{Long.toString(memoId)};
                         getContentResolver().delete(
                                 uri,

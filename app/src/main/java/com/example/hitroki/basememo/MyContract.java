@@ -5,7 +5,7 @@ import android.provider.BaseColumns;
 /**
  * Created by hitroki on 2015/02/12.
  */
-public class MyConract {
+public class MyContract {
     public static abstract class Memos implements BaseColumns {
         public static String TABLE_NAME ="memo";
         public static String COLUMN_ID ="_id";

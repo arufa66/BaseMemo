@@ -17,14 +17,14 @@ public class MyDBHelper  extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(MyConract.Memos.CREATE_TABLE);
-        db.execSQL(MyConract.Memos.INIT_TABLE);
+        db.execSQL(MyContract.Memos.CREATE_TABLE);
+        db.execSQL(MyContract.Memos.INIT_TABLE);
 
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL(MyConract.Memos.DROP_TABLE);
+        db.execSQL(MyContract.Memos.DROP_TABLE);
         onCreate(db);
     }
 }

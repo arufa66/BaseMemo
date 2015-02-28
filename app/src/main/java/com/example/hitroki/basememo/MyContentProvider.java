@@ -15,7 +15,7 @@ public class MyContentProvider extends ContentProvider {
     private static String AUTHORITY ="com.example.hitroki.basememo.mycontentprovider";
     private MyDBHelper myDBHelper;
     public static final Uri CONTENT_URI =
-            Uri.parse("content://" + AUTHORITY + "/" + MyConract.Memos.TABLE_NAME);
+            Uri.parse("content://" + AUTHORITY + "/" + MyContract.Memos.TABLE_NAME);
 
     private static final int MEMOS = 1;
     private static  final  int MEMO_ITEM = 2;
@@ -23,8 +23,8 @@ public class MyContentProvider extends ContentProvider {
     private  static final UriMatcher uriMatcher;
     static {
         uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-        uriMatcher.addURI(AUTHORITY,MyConract.Memos.TABLE_NAME,MEMOS);
-        uriMatcher.addURI(AUTHORITY,MyConract.Memos.TABLE_NAME + "/#",MEMO_ITEM);
+        uriMatcher.addURI(AUTHORITY, MyContract.Memos.TABLE_NAME,MEMOS);
+        uriMatcher.addURI(AUTHORITY, MyContract.Memos.TABLE_NAME + "/#",MEMO_ITEM);
     }
     @Override
     public boolean onCreate() {
@@ -48,7 +48,7 @@ public class MyContentProvider extends ContentProvider {
         SQLiteDatabase db = myDBHelper.getReadableDatabase();
         Cursor cursor = db.query(
                 true,
-                MyConract.Memos.TABLE_NAME,
+                MyContract.Memos.TABLE_NAME,
                 projection,
                 selection,
                 selectionArgs,
@@ -74,7 +74,7 @@ public class MyContentProvider extends ContentProvider {
         SQLiteDatabase db = myDBHelper.getWritableDatabase();
 
         long newId = db.insert(
-                MyConract.Memos.TABLE_NAME,
+                MyContract.Memos.TABLE_NAME,
                 null,
                 values
         );
@@ -89,7 +89,7 @@ public class MyContentProvider extends ContentProvider {
             throw new IllegalArgumentException("Unknown URI:" + uri);
         }
         SQLiteDatabase db = myDBHelper.getWritableDatabase();
-        int count = db.delete(MyConract.Memos.TABLE_NAME,
+        int count = db.delete(MyContract.Memos.TABLE_NAME,
                 selection,
                 selectionArgs);
         getContext().getContentResolver().notifyChange(uri,null);
@@ -102,7 +102,7 @@ public class MyContentProvider extends ContentProvider {
             throw new IllegalArgumentException("Unknown URI:" + uri);
         }
         SQLiteDatabase db = myDBHelper.getWritableDatabase();
-        int count = db.update(MyConract.Memos.TABLE_NAME,
+        int count = db.update(MyContract.Memos.TABLE_NAME,
                 values,
                 selection,
                 selectionArgs);

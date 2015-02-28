@@ -30,7 +30,7 @@ public class Category {
 
 
             do {
-                category = cursor.getString(cursor.getColumnIndex(MyConract.Memos.COLUMN_CATEGORY));
+                category = cursor.getString(cursor.getColumnIndex(MyContract.Memos.COLUMN_CATEGORY));
                 // アダプターに追加
                 adapter.add(category);
             } while (cursor.moveToNext());
@@ -47,7 +47,7 @@ public class Category {
 
         MyContentProvider contentProvider;
         String[] projection={
-                MyConract.Memos.COLUMN_CATEGORY
+                MyContract.Memos.COLUMN_CATEGORY
         };
 
         Cursor cursor =context.getContentResolver().query(
