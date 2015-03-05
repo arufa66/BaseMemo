@@ -66,7 +66,6 @@ public class EditActivity extends ActionBarActivity implements AdapterView.OnIte
 
         categoryAdapter = Category.setCategoryAdapter(this);
         categoryAdapter.add(addTag);
-        myCategorySpinner.setPromptId(R.string.title_category);
         myCategorySpinner.setAdapter(categoryAdapter);
         myCategorySpinner.setOnItemSelectedListener(this);
 

@@ -5,7 +5,7 @@ android {
     buildToolsVersion "21.1.2"
 
     defaultConfig {
-        applicationId "com.tera.hitroki.basememo"
+        applicationId "com.example.hitroki.basememo"
         minSdkVersion 17
         targetSdkVersion 21
         versionCode 1

@@ -23,6 +23,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:layout_gravity="top"
+        android:gravity="top"
         android:inputType="textMultiLine|textNoSuggestions"
         android:hint="メモ"
         android:id="@+id/myMemoBody" />
