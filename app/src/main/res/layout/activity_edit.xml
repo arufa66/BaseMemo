@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textNoSuggestions"
-        android:hint="Title"
+        android:hint="タイトル"
         android:id="@+id/myMemoTitle" />
 
     <EditText
@@ -24,7 +24,7 @@
         android:layout_weight="1"
         android:layout_gravity="top"
         android:inputType="textMultiLine|textNoSuggestions"
-        android:hint="Body"
+        android:hint="メモ"
         android:id="@+id/myMemoBody" />
 
     <TextView

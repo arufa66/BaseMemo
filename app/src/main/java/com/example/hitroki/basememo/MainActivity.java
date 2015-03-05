@@ -57,6 +57,7 @@ public class MainActivity extends ActionBarActivity implements LoaderManager.Loa
 
         categoryAdapter = Category.setCategoryAdapter(this);
         categoryAdapter.add(ALL);
+        myCategorySpinner.setPromptId(R.string.title_category);
         myCategorySpinner.setAdapter(categoryAdapter);
         myCategorySpinner.setOnItemSelectedListener(this);
         myCategorySpinner.setOnItemLongClickListener(this);
